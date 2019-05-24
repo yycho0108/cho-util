@@ -8,4 +8,6 @@ setup(name='cho-util',
       author_email='jchocholate@gmail.com',
       license='MIT',
       packages=['cho_util'],
-      zip_safe=False)
+      zip_safe=False,
+      scripts=['bin/pyhelp']
+      )

@@ -11,6 +11,8 @@ class KeyCallback(object):
     def log(self, k):
         print(k)
         return False
+    def update(self, kcb):
+        self.kmap_.update(kcb)
     def __call__(self, k):
         k = (k & 0xff)
         if k not in self.kmap_:

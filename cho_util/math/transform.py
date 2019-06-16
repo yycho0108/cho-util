@@ -1,56 +1,30 @@
 import numpy as np
+from cho_util.math.common import *
+import cho_util.math.rotation as rotation
 
-
-def rint(x):
-    return np.round(x).astype(np.int32)
-
-
-def anorm(x):
-    return (x + np.pi) % (2*np.pi) - np.pi
-
-
-def inv(x):
-    return np.linalg.inv(x)
-
-
-def to_h(x, z=False):
+def to_homogeneous(x):
     x = np.asarray(x)
     o = np.ones_like(x[..., :1])
-    if z:
-        o *= 0
     return np.concatenate([x, o], axis=-1)
 
-
-def from_h(x):
+def from_homogeneous(x):
     return x[..., :-1] / x[..., -1:]
 
-
-def norm(x, *args, **kwargs):
-    return np.linalg.norm(x, *args, axis=-1, **kwargs)
-
-
-def uvec(x):
-    n = norm(x, keepdims=True)
-    if n < np.finfo(np.float32).eps:
-        return x
-    else:
-        return x / norm(x, keepdims=True)
-
-
-def R2(x, T=None, c=None, s=None):
-    if T is None:
+def rotation_2d(x, R=None, c=None, s=None):
+    if R is None:
         shape = tuple(np.shape(x)[:-1]) + (2, 2)
-        T = np.zeros(shape, dtype=np.float32)
+        R = np.zeros(shape, dtype=x.dtype)
     if c is None:
         c = np.cos(x)
     if s is None:
         s = np.sin(x)
-    T[..., 0, 0] = c
-    T[..., 0, 1] = -s
-    T[..., 1, 0] = s
-    T[..., 1, 1] = c
+    R[..., 0, 0] = c
+    R[..., 0, 1] = -s
+    R[..., 1, 0] = s
+    R[..., 1, 1] = c
+    return R
 
-    return T
+def inverse
 
 
 def Rz(x, T=None, c=None, s=None):
@@ -119,51 +93,6 @@ def rlerp(ra, rb, w):
     q = tx.quaternion_slerp(q0, q1, w)
     R = tx.quaternion_matrix(q)[:3, :3]
     return R
-
-
-def add_p3(p3, dp3):
-    x = p3[..., 0]
-    y = p3[..., 1]
-    h = p3[..., 2]
-    dx = dp3[..., 0]
-    dy = dp3[..., 1]
-    dh = dp3[..., 2]
-
-    dp = np.einsum('...ab,...b->...a',
-                   R2(h), dp3[..., :2])
-    h = anorm(h+dh)[..., None]
-
-    res = np.concatenate([dp, h], axis=-1)
-    return res
-
-
-def p3_T(p3):
-    """
-    Computes homogeneous transform,
-    from p3=(x,y,h) parametrization.
-    The resultant transform represents a conversion
-    from the p3 frame to the `world` frame.
-    """
-    p3 = np.asarray(p3)
-
-    if np.ndim(p3) > 1:
-        shape = tuple(p3.shape[:-1]) + (4, 4)
-        T = np.zeros(shape, dtype=np.float32)
-        # translation
-        T[..., 0, 3] = p3[..., 0]
-        T[..., 1, 3] = p3[..., 1]
-        # rotation
-        Rz(p3[..., 2], T=T)
-        # homogeneous
-        T[..., 3, 3] = 1
-        return T
-    else:
-        x, y, h = p3
-        return tx.compose_matrix(
-            translate=(x, y, 0),
-            angles=(0, 0, h))
-    pass
-
 
 def rx3(R, x):
     rx = np.einsum('...ab,...b->...a', R[..., :3, :3], x)

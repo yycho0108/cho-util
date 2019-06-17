@@ -1,38 +1,107 @@
 import numpy as np
 from cho_util.math.common import *
 
+
 def from_matrix(x, out=None):
-    #TODO(yycho0108): investigate singularities
-    #TODO(yycho0108): implement
+    x = np.asarray(x)
+    if out is None:
+        out = np.empty(shape=np.shape(x)[:-2] + (4,))
+
+    m00, m01, m02 = [x[..., 0, i] for i in range(3)]
+    m10, m11, m12 = [x[..., 1, i] for i in range(3)]
+    m20, m21, m22 = [x[..., 2, i] for i in range(3)]
+
+    np.subtract(m21, m12, out=out[..., 0])
+    np.subtract(m02, m20, out=out[..., 1])
+    np.subtract(m10, m01, out=out[..., 2])
+    out[..., :3] = uvec(out[..., :3])
+    out[..., 3] = np.arccos(np.clip((m00 + m11 + m22 - 1)*0.5, -1.0, 1.0))
+    msk = (np.isnan(out[..., 3]))
+    dbg = (m00 + m11 + m22 - 1)*0.5
+    if msk.sum() > 0:
+        print ( dbg[msk] )
+        raise ValueError('fail!')
     return out
+
 
 def from_quaternion(x, out=None):
-    #TODO(yycho0108): investigate singularities
-    qw = x[..., 3]
-    mag = np.sqrt(1.0 - qw*qw)
-    out[..., :3] = x[..., :3] / mag
-    out[..., 3] = 2 * np.arccos(qw)
-    return out
-
-def from_euler(x, out=None):
-    #TODO(yycho0108): investigate singularities
     x = np.asarray(x)
     if out is None:
         out = np.empty(shape=np.shape(x)[:-1] + (4,))
-    c, s = np.cos(x), np.sin(x)
-    cx,cy,cz = [c[...,i] for i in range(3)]
-    sx,sy,sz = [s[...,i] for i in range(3)]
-
-    out[..., 0] = s1*s2*c3 + c1*c2*s3
-    out[..., 1] = s1*c2*c3 + c1*s2*s3
-    out[..., 2] = c1*s2*c3 - s1*c2*s3
-    out[..., 3] = 2 * np.arccos(cx*cy*cz - sx*sy*sz)
+    qw = x[..., 3:]
+    mag = np.sqrt(np.maximum(0.0, 1.0 - qw*qw))
+    out[..., :3] = x[..., :3] / mag
+    out[..., 3:] = 2 * np.arccos(np.clip(qw, -1.0, 1.0))
     return out
 
+
+def from_euler(x, out=None):
+    x = np.asarray(x)
+    if out is None:
+        out = np.empty(shape=np.shape(x)[:-1] + (4,))
+
+    x, y, z = [x[..., i] for i in range(3)]
+
+    x0 = np.cos(x)
+    x6 = np.sin(x)
+    x3 = np.cos(y)
+    x4 = np.sin(y)
+    x5 = np.cos(z)
+    x1 = np.sin(z)
+
+    x2 = x0*x1
+    x10 = x1*x6
+    x7 = x5*x6
+    x11 = x0*x5
+
+    x8 = x1*x3 + x2 - x4*x7
+    x9 = -x2*x4 + x3*x6 + x7
+    x12 = x10 + x11*x4 + x4
+    x13 = 1/np.linalg.norm([x8, x9, x12], axis=0)
+
+    out[..., 0] = x9
+    out[..., 1] = x12
+    out[..., 2] = x8
+    out[..., :3] *= x13[..., None]
+    out[..., 3] = np.arccos(np.clip(0.5 * (x0*x3 + x10*x4 + x11 + x3*x5 - 1), -1.0, 1.0))
+    return out
+
+
 def from_axis_angle(x, out=None):
-    #TODO(yycho0108): investigate singularities
     x = np.asarray(x)
     if out is None:
         out = np.empty(shape=np.shape(x)[:-1] + (4,))
     np.copyto(out, x)
     return out
+
+
+def rotate(r, x, out=None):
+    x = np.asarray(x)
+    if out is None:
+        out = np.empty_like(x)
+    if r.shape[-1] == 3:
+        # format : angle * axis
+        angle = norm(r, keepdims=True)
+        axis = r / angle[..., None]
+    elif r.shape[-1] == 4:
+        # format : (axis, angle)
+        axis = r[..., :3]
+        angle = r[..., 3:]
+    else:
+        raise ValueError("Invalid Input Shape : {}".format(x.shape))
+    u = axis
+    c, s = np.cos(angle), np.sin(angle)
+    d = (u*x).sum(axis=-1, keepdims=True)
+
+    # out = (x*c) + s*np.cross(u, x) + (1.-c)*d*u
+    np.multiply(x, c, out=out)
+    out += s*np.cross(u, x)
+    out += (1.-c)*d*u
+    return out
+
+def random(size, *args, **kwargs):
+    size = tuple(np.reshape(size, [-1])) + (4,)
+    out = np.random.normal(size=size, *args, **kwargs)
+    out[..., :3] = uvec(out[..., :3])
+    return out
+

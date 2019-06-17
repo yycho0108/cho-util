@@ -74,12 +74,12 @@ def from_axis_angle(x, out=None):
 
     if x.shape[-1] == 3:
         # format : angle * axis
-        angle = norm(x)
+        angle = norm(x, keepdims=True)
         axis = x / angle[..., None]
     elif x.shape[-1] == 4:
         # format : (axis, angle)
         axis = x[..., :3]
-        angle = x[..., 3]
+        angle = x[..., 3:]
     else:
         raise ValueError("Invalid Input Shape : {}".format(x.shape))
 
@@ -99,16 +99,35 @@ def from_axis_angle(x, out=None):
     m12 = tmp - sin_axis_x
     m21 = tmp + sin_axis_x
     diag = cos1_axis * axis + cos_angle
-    diag_x, diag_y, diag_z = tf.unstack(diag, axis=-1)
+    diag_x, diag_y, diag_z = [diag[..., i] for i in range(3)]
 
     out[..., 0, 0] = diag_x
     out[..., 0, 1] = m01
     out[..., 0, 2] = m02
 
-    out[..., 0, 0] = m10
-    out[..., 0, 1] = diag_y
-    out[..., 0, 2] = m12
+    out[..., 1, 0] = m10
+    out[..., 1, 1] = diag_y
+    out[..., 1, 2] = m12
 
-    out[..., 0, 0] = m20
-    out[..., 0, 1] = m21
-    out[..., 0, 2] = diag_z
+    out[..., 2, 0] = m20
+    out[..., 2, 1] = m21
+    out[..., 2, 2] = diag_z
+
+    return out
+
+
+def rotate(r, x, out=None):
+    x = np.asarray(x)
+    if out is None:
+        out = np.empty_like(x)
+    np.einsum('...ij,...j->...i', r, x, out=out)
+    return out
+
+
+def random(size, *args, **kwargs):
+    # TODO(yycho0108): more efficient randomization
+    size = tuple(np.reshape(size, [-1])) + (3, 3)
+    out = np.random.normal(size=size, *args, **kwargs)
+    out = [np.linalg.qr(o)[0] for o in out.reshape(-1, 3, 3)]
+    out = np.reshape(out, size)
+    return out

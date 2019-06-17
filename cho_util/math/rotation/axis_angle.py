@@ -8,17 +8,17 @@ from cho_util.math.rotation import _axis_angle
 from cho_util.math.rotation._axis_angle import *
 
 
-def to_matrix(x):
-    return _matrix.from_axis_angle(x)
+def to_matrix(x, *args, **kwargs):
+    return _matrix.from_axis_angle(x, *args, **kwargs)
 
 
-def to_quaternion(x):
-    return _quaternion.from_axis_angle(x)
+def to_quaternion(x, *args, **kwargs):
+    return _quaternion.from_axis_angle(x, *args, **kwargs)
 
 
-def to_euler(x):
-    return _euler.from_axis_angle(x)
+def to_euler(x, *args, **kwargs):
+    return _euler.from_axis_angle(x, *args, **kwargs)
 
 
-def to_axis_angle(x):
-    return _axis_angle.from_axis_angle(x)
+def to_axis_angle(x, *args, **kwargs):
+    return _axis_angle.from_axis_angle(x, *args, **kwargs)

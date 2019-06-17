@@ -8,17 +8,23 @@ from cho_util.math.rotation import _axis_angle
 from cho_util.math.rotation._euler import *
 
 
-def to_matrix(x):
-    return _matrix.from_euler(x)
+def to_matrix(x, *args, **kwargs):
+    return _matrix.from_euler(x, *args, **kwargs)
 
 
-def to_quaternion(x):
-    return _quaternion.from_euler(x)
+def to_quaternion(x, *args, **kwargs):
+    return _quaternion.from_euler(x, *args, **kwargs)
 
 
-def to_euler(x):
-    return _euler.from_euler(x)
+def to_euler(x, *args, **kwargs):
+    return _euler.from_euler(x, *args, **kwargs)
 
 
-def to_axis_angle(x):
-    return _axis_angle.from_euler(x)
+def to_axis_angle(x, *args, **kwargs):
+    return _axis_angle.from_euler(x, *args, **kwargs)
+
+# def rotate(r, x, out=None):
+#    # option : delegate to matrix
+#    r = to_matrix(r)
+#    out = _matrix.rotate(r, x, out)
+#    return out

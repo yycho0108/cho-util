@@ -16,11 +16,6 @@ def from_matrix(x, out=None):
     np.subtract(m10, m01, out=out[..., 2])
     out[..., :3] = uvec(out[..., :3])
     out[..., 3] = np.arccos(np.clip((m00 + m11 + m22 - 1)*0.5, -1.0, 1.0))
-    msk = (np.isnan(out[..., 3]))
-    dbg = (m00 + m11 + m22 - 1)*0.5
-    if msk.sum() > 0:
-        print ( dbg[msk] )
-        raise ValueError('fail!')
     return out
 
 
@@ -29,8 +24,7 @@ def from_quaternion(x, out=None):
     if out is None:
         out = np.empty(shape=np.shape(x)[:-1] + (4,))
     qw = x[..., 3:]
-    mag = np.sqrt(np.maximum(0.0, 1.0 - qw*qw))
-    out[..., :3] = x[..., :3] / mag
+    out[..., :3] = uvec(x[..., :3])
     out[..., 3:] = 2 * np.arccos(np.clip(qw, -1.0, 1.0))
     return out
 
@@ -57,12 +51,12 @@ def from_euler(x, out=None):
     x8 = x1*x3 + x2 - x4*x7
     x9 = -x2*x4 + x3*x6 + x7
     x12 = x10 + x11*x4 + x4
-    x13 = 1/np.linalg.norm([x8, x9, x12], axis=0)
 
     out[..., 0] = x9
     out[..., 1] = x12
     out[..., 2] = x8
-    out[..., :3] *= x13[..., None]
+    out[...,:3] = uvec(out[...,:3])
+
     out[..., 3] = np.arccos(np.clip(0.5 * (x0*x3 + x10*x4 + x11 + x3*x5 - 1), -1.0, 1.0))
     return out
 

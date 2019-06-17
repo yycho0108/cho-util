@@ -88,15 +88,18 @@ def from_axis_angle(x, out=None):
     return out
 
 
-def multiply(quaternion1, quaternion2, name=None):
-
-    x1, y1, z1, w1 = tf.unstack(quaternion1, axis=-1)
-    x2, y2, z2, w2 = tf.unstack(quaternion2, axis=-1)
-    x = x1 * w2 + y1 * z2 - z1 * y2 + w1 * x2
-    y = -x1 * z2 + y1 * w2 + z1 * x2 + w1 * y2
-    z = x1 * y2 - y1 * x2 + z1 * w2 + w1 * z2
-    w = -x1 * x2 - y1 * y2 - z1 * z2 + w1 * w2
-    return tf.stack((x, y, z, w), axis=-1)
+def multiply(q1, q2, out=None):
+    q1 = np.asarray(q1)
+    q2 = np.asarray(q2)
+    if out is None:
+        out = np.empty_like(q1)
+    x1, y1, z1, w1 = [q1[..., i] for i in range(4)]
+    x2, y2, z2, w2 = [q2[..., i] for i in range(4)]
+    out[..., 0] = x1 * w2 + y1 * z2 - z1 * y2 + w1 * x2
+    out[..., 1] = -x1 * z2 + y1 * w2 + z1 * x2 + w1 * y2
+    out[..., 2] = x1 * y2 - y1 * x2 + z1 * w2 + w1 * z2
+    out[..., 3] = -x1 * x2 - y1 * y2 - z1 * z2 + w1 * w2
+    return out
 
 
 def rotate(r, x, out=None):
@@ -115,6 +118,7 @@ def rotate(r, x, out=None):
     out[..., 1] = qw*x3 - qx*x2 + qy*x1 + qz*x0
     out[..., 2] = qw*x2 + qx*x3 - qy*x0 + qz*x1
     return out
+
 
 def random(size, *args, **kwargs):
     size = tuple(np.reshape(size, [-1])) + (4,)

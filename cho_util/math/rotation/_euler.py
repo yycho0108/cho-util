@@ -36,6 +36,8 @@ def from_matrix(x, out=None):
     out[msk, 2] = np.arctan2(x_a[..., j, i], x_a[..., i, i])
 
     nmsk = ~msk
+    if nmsk.sum() > 0:
+        raise ValueError("{}".format(nmsk.sum()))
     x_b = x[nmsk]
     out[nmsk, 0] = np.arctan2(-x_b[..., j, k],  x_b[..., j, j])
     out[nmsk, 1] = np.arctan2(-x_b[..., k, i],  cy[nmsk])

@@ -16,7 +16,7 @@ def main():
     source_set = ['m', 'q', 'e', 'a']
     size = (1024)
     n_iter = 100
-    seq_len = 4096
+    seq_len = 2
 
     gen = {
         'm': rotation.matrix.random,
@@ -59,17 +59,19 @@ def main():
         ts.append(time.time())
 
         # random conversion sequence
+        #seq = 'mqa'
         seq = np.random.choice(len(source_set), size=seq_len, replace=True)
         seq = np.array(source_set)[seq]
         seq = ''.join(seq)
-        print(seq)
+        print(seq[:3] + '..' + seq[-3:])
 
         # initialization
-        x = gen[seq[0]](size=size)
+        x = gen[seq[0]](size=size, scale=1e-16).astype(np.float32)
         point = random_point(size=size)
 
         R0 = f['{},{}'.format(seq[0], 'm')](x)
         initial_rotated_point = r[seq[0]](x, point)
+        initial_rotated_point_m = r['m'](R0, point)
         #print('initial')
         #print(initial_rotated_point)
 
@@ -80,21 +82,24 @@ def main():
             f_bw = f['{},{}'.format(nxt, prv)]
             x = f_fw(x)
             if np.any(np.isnan(x)):
-                print('x is nan')
-                break
+                print('x is nan : {}->{}'.format(prv, nxt))
+                return
 
         R1 = f['{},{}'.format(seq[-1], 'm')](x)
         final_rotated_point = r[seq[-1]](x, point)
-        #print('final')
+        final_rotated_point_m = r['m'](R1, point)
+        #print('final'
         #print(final_rotated_point)
 
         error  = norm(final_rotated_point-initial_rotated_point)
+        error_m  = norm(final_rotated_point_m-initial_rotated_point_m)
         Rerror = norm(R1-R0, axis=(-2,-1))
-
-        print('error (point) stats', error.min(), error.mean(), error.max())
-        print('error (matrix) stats', Rerror.min(), Rerror.mean(), Rerror.max())
-        ts.append(time.time())
-        print('took {} sec'.format(np.diff(ts)))
+        if error.max() > 0.05:
+            print('error (point) stats', error.min(), error.mean(), error.max())
+            print('error (point-m) stats', error_m.min(), error_m.mean(), error_m.max())
+            print('error (matrix) stats', Rerror.min(), Rerror.mean(), Rerror.max())
+            ts.append(time.time())
+            print('took {} sec'.format(np.diff(ts)))
 
 
 if __name__ == '__main__':

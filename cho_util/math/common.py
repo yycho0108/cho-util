@@ -24,13 +24,7 @@ def uvec(x):
     """ convert to unit vector """
     n = norm(x, keepdims=True)
     return np.divide(x, n, out=np.zeros_like(x),
-                     where=(n > np.finfo(np.float32).eps))
-    #x / norm(x, keepdims=True)
-    # if n < np.finfo(np.float32).eps:
-    #    return x
-    # else:
-    #    return x / norm(x, keepdims=True)
-
+                     where=(n > np.finfo(x.dtype).eps))
 
 def lerp(a, b, w):
     """ linear interpolation """

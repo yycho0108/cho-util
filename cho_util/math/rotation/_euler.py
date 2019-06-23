@@ -1,24 +1,6 @@
 import numpy as np
 from cho_util.math.common import *
 
-#    x2 = -cx*sz
-#    x6 = cz*sx
-#    x7 = sz*sx
-#    x8 = cx*cz
-#    x10 = x*cy
-#
-#    np.multiply(sz, x10, out=out[..., 1])
-#    out[..., 1] += y*(sy*x7 + x8)
-#    out[..., 1] -= z*(x2*sy + x6)
-#
-#    np.multiply(x10, cz, out=out[..., 0])
-#    out[..., 0] += y*(x2 + sy*x6)
-#    out[..., 0] += z*(sy*x8 + x7)
-#
-#    np.multiply(-x, sy, out=out[..., 2])
-#    out[..., 2] += cx*cy*z
-#    out[..., 2] += sx*cy*y
-
 
 def from_matrix(x, out=None):
     # TODO(yycho0108): implement
@@ -152,30 +134,27 @@ def rotate(r, x, out=None):
     x8 = cx*cz
     x10 = x*cy
 
-    np.multiply(-x, sy, out=out[..., 2])
-    out[..., 2] += cx*cy*z
-    out[..., 2] += sx*cy*y
-
-    # memory optimization:
-    # cx, cy, sx now available
-    tmp1 = cx
-    tmp2 = cy
-    tmp3 = sx
-    cx = None
-    cy = None
-    sx = None
+    np.multiply(x10, cz, out=out[..., 0])
+    out[..., 0] += y*(sy*x6+x2)
+    out[..., 0] += z*(sy*x8+x7)
 
     np.multiply(sz, x10, out=out[..., 1])
     out[..., 1] += y*(sy*x7+x8)
     out[..., 1] -= z*(x2*sy+x6)
 
-    np.multiply(x10, cz, out=out[..., 0])
-    out[..., 0] += y*(sy*x6+x2)
-    out[..., 0] += z*(sy*x8+x7)
+    np.multiply(-x, sy, out=out[..., 2])
+    out[..., 2] += cx*cy*z
+    out[..., 2] += sx*cy*y
 
     return out
+
 
 def random(size, *args, **kwargs):
     size = tuple(np.reshape(size, [-1])) + (3,)
     return np.random.normal(size=size, *args, **kwargs)
 
+
+def inverse(r, out=None):
+    r = np.asarray(r)
+    if out is None:
+        out = np.empty_like(r)

@@ -1,15 +1,47 @@
+from unittest import TestCase
 import numpy as np
-from cho_util.math import rotation
-from cho_util.math.common import *
 import time
+
+from cho_util.math.common import *
+from cho_util.math import rotation
 
 def random_point(size, *args, **kwargs):
     size = tuple(np.reshape(size, [-1])) + (3,)
     out = np.random.normal(size=size, *args, **kwargs)
     return out
 
+def test_inverse():
+    seed = np.random.randint(low=0,high=65535)
+    print('seed  : {}'.format(seed))
+    np.random.seed( seed )
+    size = (1)
+    n_iter = 100
 
-def main():
+    rtypes = {
+            'm' : rotation.matrix,
+            'q' : rotation.quaternion,
+            #'e' : rotation.euler,
+            'a' : rotation.axis_angle
+            }
+    source_set = list(rtypes.keys())
+
+    seq = np.random.choice(len(source_set), size=n_iter, replace=True)
+    seq = np.array(source_set)[seq]
+    seq = ''.join(seq)
+
+    for s in seq:
+        r = rtypes[s].random(size=size, scale=1e-3)
+        ri = rtypes[s].inverse(r)
+        p = random_point(size)
+        
+        rir_p = rtypes[s].rotate(ri, rtypes[s].rotate(r, p))
+        irr_p = rtypes[s].rotate(r, rtypes[s].rotate(ri, p))
+        if not np.allclose(p, rir_p):
+            print('rir_p failed for type : {}'.format(s))
+        if not np.allclose(p, irr_p):
+            print('irr_p failed for type : {}'.format(s))
+
+def test_rotate():
     seed = np.random.randint(low=0,high=65535)
     print('seed  : {}'.format(seed))
     np.random.seed( seed )
@@ -101,6 +133,9 @@ def main():
             ts.append(time.time())
             print('took {} sec'.format(np.diff(ts)))
 
+def main():
+    test_rotate()
+    test_inverse()
 
 if __name__ == '__main__':
     main()

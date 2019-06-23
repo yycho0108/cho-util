@@ -29,3 +29,5 @@ def uvec(x):
 def lerp(a, b, w):
     """ linear interpolation """
     return (a * (1.0-w)) + (b*w)
+
+__all__ = ['rint', 'anorm', 'norm', 'uvec', 'lerp', 'inv']

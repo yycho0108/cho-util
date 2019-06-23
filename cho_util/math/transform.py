@@ -21,6 +21,9 @@ def compose(r, t, rtype, out=None):
 def translation_from_matrix(T):
     return T[..., :3, 3]
 
+def rotation_from_matrix(T):
+    return T[..., :3, :3]
+
 def rotation_2d(x, R=None, c=None, s=None):
     if R is None:
         shape = tuple(np.shape(x)[:-1]) + (2, 2)

@@ -125,3 +125,17 @@ def random(size, *args, **kwargs):
     out = np.random.normal(size=size, *args, **kwargs)
     out = uvec(out)
     return out
+
+
+def conjugate(q, out=None):
+    q = np.asarray(q)
+    if out is None:
+        out = np.empty_like(q)
+    out[..., :3] = -q[..., :3]
+    out[..., 3] = q[..., 3]
+    return out
+
+
+def inverse(q, out=None):
+    # NOTE: assume unit quaternion
+    return conjugate(q, out)

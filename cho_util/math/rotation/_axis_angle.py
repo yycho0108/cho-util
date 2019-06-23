@@ -1,5 +1,5 @@
-import numpy as np
 from cho_util.math.common import *
+import numpy as np
 
 
 def from_matrix(x, out=None):
@@ -55,9 +55,10 @@ def from_euler(x, out=None):
     out[..., 0] = x9
     out[..., 1] = x12
     out[..., 2] = x8
-    out[...,:3] = uvec(out[...,:3])
+    out[..., :3] = uvec(out[..., :3])
 
-    out[..., 3] = np.arccos(np.clip(0.5 * (x0*x3 + x10*x4 + x11 + x3*x5 - 1), -1.0, 1.0))
+    out[..., 3] = np.arccos(
+        np.clip(0.5 * (x0*x3 + x10*x4 + x11 + x3*x5 - 1), -1.0, 1.0))
     return out
 
 
@@ -93,9 +94,18 @@ def rotate(r, x, out=None):
     out += (1.-c)*d*u
     return out
 
+
 def random(size, *args, **kwargs):
     size = tuple(np.reshape(size, [-1])) + (4,)
     out = np.random.normal(size=size, *args, **kwargs)
     out[..., :3] = uvec(out[..., :3])
     return out
 
+
+def inverse(r, out=None):
+    r = np.asarray(r)
+    if out is None:
+        out = np.empty_like(r)
+    out[..., :3] = r[..., :3]
+    out[..., 3] = -r[..., 3]
+    return out

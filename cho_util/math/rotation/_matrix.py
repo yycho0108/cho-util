@@ -131,3 +131,10 @@ def random(size, *args, **kwargs):
     out = [np.linalg.qr(o)[0] for o in out.reshape(-1, 3, 3)]
     out = np.reshape(out, size)
     return out
+
+
+def inverse(r, out=None):
+    if out is None:
+        out = np.empty_like(r)
+    np.copyto(out, r.swapaxes(-2, -1))
+    return out

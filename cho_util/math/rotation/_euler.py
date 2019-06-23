@@ -166,24 +166,12 @@ def rotate(r, x, out=None):
     sx = None
 
     np.multiply(sz, x10, out=out[..., 1])
-    np.multiply(sy, x7, out=tmp1)
-    tmp1 += x8
-    tmp1 *= y
-    out[..., 1] += tmp1
-    np.multiply(x2, sy, out=tmp2)
-    tmp2 += x6
-    tmp2 *= z
-    out[..., 1] -= tmp2
+    out[..., 1] += y*(sy*x7+x8)
+    out[..., 1] -= z*(x2*sy+x6)
 
     np.multiply(x10, cz, out=out[..., 0])
-    np.multiply(sy, x6, out=tmp3)
-    tmp3 += x2
-    tmp3 *= y
-    out[..., 0] += tmp3
-    np.multiply(sy, x8, out=tmp3)
-    tmp3 += x7
-    tmp3 *= z
-    out[..., 0] += tmp3
+    out[..., 0] += y*(sy*x6+x2)
+    out[..., 0] += z*(sy*x8+x7)
 
     return out
 

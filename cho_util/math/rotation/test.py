@@ -66,7 +66,7 @@ def main():
         print(seq[:3] + '..' + seq[-3:])
 
         # initialization
-        x = gen[seq[0]](size=size, scale=1e-16).astype(np.float32)
+        x = gen[seq[0]](size=size, scale=1e-3).astype(np.float32)
         point = random_point(size=size)
 
         R0 = f['{},{}'.format(seq[0], 'm')](x)

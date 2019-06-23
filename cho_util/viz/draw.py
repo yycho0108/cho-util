@@ -2,7 +2,7 @@
 import numpy as np
 import cv2
 
-from cho_util import vmath as vm
+from cho_util import math as vm
 
 def draw_lines(img1,img2,lines,pts1,pts2,cols,
         draw_pt=False
@@ -60,18 +60,20 @@ def draw_matches(img1, img2, pt1, pt2,
     for (p1, p2, c) in zip(pt1[msk], pt2[msk], col):
         p1 = tuple(p1)
         p2 = tuple(p2)
-        cv2.line(mim, p1, p2, c, radius)
+        cv2.line(mim, p1, p2, color=tuple([255,255,255]) ) #tuple([int(x) for x in c])), radius)
     mim = cv2.addWeighted(mim0, 0.5, mim, 0.5, 0.0)
 
     for (p1, p2, c) in zip(pt1[msk], pt2[msk], col):
-        cv2.circle(mim, tuple(p1), radius, c, radius)
-        cv2.circle(mim, tuple(p2), radius, c, radius)
+        #cc = tuple(np.uint8(vm.rint(c)))
+        cc = (255,255,255)
+        cv2.circle(mim, tuple(p1), radius, cc, -1)
+        cv2.circle(mim, tuple(p2), radius, cc, -1)
 
     for p in pt1[~msk]:
-        cv2.circle(mim, tuple(p), radius, (255,0,0), radius)
+        cv2.circle(mim, tuple(p), radius, (255,0,0), -1)
 
     for p in pt2[~msk]:
-        cv2.circle(mim, tuple(p), radius, (255,0,0), radius)
+        cv2.circle(mim, tuple(p), radius, (255,0,0), -1)
     return mim
 
 def make_color_wheel():

@@ -120,7 +120,7 @@ def rotate(r, x, out=None):
     return out
 
 
-def random(size, *args, **kwargs):
+def random(size=(), *args, **kwargs):
     size = tuple(np.reshape(size, [-1])) + (4,)
     out = np.random.normal(size=size, *args, **kwargs)
     out = uvec(out)
@@ -139,3 +139,7 @@ def conjugate(q, out=None):
 def inverse(q, out=None):
     # NOTE: assume unit quaternion
     return conjugate(q, out)
+
+
+def identity(dtype=np.float64):
+    return np.asarray([0, 0, 0, 1], dtype=dtype)

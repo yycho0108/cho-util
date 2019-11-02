@@ -149,7 +149,7 @@ def rotate(r, x, out=None):
     return out
 
 
-def random(size, *args, **kwargs):
+def random(size=(), *args, **kwargs):
     size = tuple(np.reshape(size, [-1])) + (3,)
     return np.random.normal(size=size, *args, **kwargs)
 
@@ -158,3 +158,7 @@ def inverse(r, out=None):
     r = np.asarray(r)
     if out is None:
         out = np.empty_like(r)
+
+
+def identity(dtype=np.float64):
+    return np.zeros(3, dtype=dtype)

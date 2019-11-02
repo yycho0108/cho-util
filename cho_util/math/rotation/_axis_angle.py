@@ -95,7 +95,7 @@ def rotate(r, x, out=None):
     return out
 
 
-def random(size, *args, **kwargs):
+def random(size=(), *args, **kwargs):
     size = tuple(np.reshape(size, [-1])) + (4,)
     out = np.random.normal(size=size, *args, **kwargs)
     out[..., :3] = uvec(out[..., :3])
@@ -109,3 +109,7 @@ def inverse(r, out=None):
     out[..., :3] = r[..., :3]
     out[..., 3] = -r[..., 3]
     return out
+
+
+def identity(dtype=np.float64):
+    return np.asarray([1, 0, 0, 0], dtype=dtype)

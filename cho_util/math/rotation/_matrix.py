@@ -124,7 +124,7 @@ def rotate(r, x, out=None):
     return out
 
 
-def random(size, *args, **kwargs):
+def random(size=(), *args, **kwargs):
     # TODO(yycho0108): more efficient randomization
     size = tuple(np.reshape(size, [-1])) + (3, 3)
     out = np.random.normal(size=size, *args, **kwargs)
@@ -138,3 +138,6 @@ def inverse(r, out=None):
         out = np.empty_like(r)
     np.copyto(out, r.swapaxes(-2, -1))
     return out
+
+def identity(dtype=np.float64):
+    return np.eye(3, dtype=dtype)

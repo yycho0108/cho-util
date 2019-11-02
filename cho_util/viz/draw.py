@@ -60,12 +60,13 @@ def draw_matches(img1, img2, pt1, pt2,
     for (p1, p2, c) in zip(pt1[msk], pt2[msk], col):
         p1 = tuple(p1)
         p2 = tuple(p2)
-        cv2.line(mim, p1, p2, color=tuple([255,255,255]) ) #tuple([int(x) for x in c])), radius)
+        cc = tuple([int(e) for e in vm.rint(c)])
+        cv2.line(mim, p1, p2, cc, radius)
     mim = cv2.addWeighted(mim0, 0.5, mim, 0.5, 0.0)
 
     for (p1, p2, c) in zip(pt1[msk], pt2[msk], col):
-        #cc = tuple(np.uint8(vm.rint(c)))
-        cc = (255,255,255)
+        cc = tuple([int(e) for e in vm.rint(c)])
+        #cc = (255,255,255)
         cv2.circle(mim, tuple(p1), radius, cc, -1)
         cv2.circle(mim, tuple(p2), radius, cc, -1)
 

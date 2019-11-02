@@ -14,7 +14,7 @@ def compose(r, t, rtype, out=None):
     if out is None:
         shape = tuple(np.shape(t)[:-1]) + (4, 4)
         out = np.zeros(shape, dtype=t.dtype)
-    out[..., :3, :3] = rtype.to_matrix(r)
+    rtype.to_matrix(r, out=out[..., :3, :3])
     out[..., :3, 3:] = t.reshape(out[...,:3,3:].shape)
     return out
 

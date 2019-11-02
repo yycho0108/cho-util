@@ -91,11 +91,11 @@ def test_rotate():
         ts.append(time.time())
 
         # random conversion sequence
-        #seq = 'mqa'
         seq = np.random.choice(len(source_set), size=seq_len, replace=True)
         seq = np.array(source_set)[seq]
         seq = ''.join(seq)
-        print(seq[:3] + '..' + seq[-3:])
+        # uncomment below to debug
+        #print(seq[:3] + '..' + seq[-3:])
 
         # initialization
         x = gen[seq[0]](size=size, scale=1e-3).astype(np.float32)

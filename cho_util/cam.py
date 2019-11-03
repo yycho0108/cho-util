@@ -1,6 +1,10 @@
 import argparse
-import cv2
 from collections import defaultdict
+
+try:
+    import cv2
+except ImportError as e:
+    print('OpenCV does not exist, camera disabled : {}'.format(e))
 
 class KeyCallback(object):
     def __init__(self):

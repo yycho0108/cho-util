@@ -1,6 +1,9 @@
 #!/usr/bin/env python2
 import numpy as np
-import cv2
+try:
+    import cv2
+except ImportError as e:
+    print('OpenCV Import Error : {}'.format(e))
 
 from cho_util import math as vm
 

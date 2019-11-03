@@ -17,10 +17,10 @@ def from_matrix(x, out=None):
     m10, m11, m12 = [x[..., 1, i] for i in range(3)]
     m20, m21, m22 = [x[..., 2, i] for i in range(3)]
 
-    out[..., I_X] = 1 + m00 - m11 - m22
-    out[..., I_Y] = 1 - m00 + m11 - m22
-    out[..., I_Z] = 1 - m00 - m11 + m22
-    out[..., I_W] = 1 + m00 + m11 + m22
+    out[..., I_X] = 1. + m00 - m11 - m22
+    out[..., I_Y] = 1. - m00 + m11 - m22
+    out[..., I_Z] = 1. - m00 - m11 + m22
+    out[..., I_W] = 1. + m00 + m11 + m22
 
     # sqrt(max(0,x))/2
     for i in range(4):

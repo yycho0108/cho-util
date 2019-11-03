@@ -77,7 +77,7 @@ def rotate(r, x, out=None):
     if r.shape[-1] == 3:
         # format : angle * axis
         angle = norm(r, keepdims=True)
-        axis = r / angle[..., None]
+        axis = r / angle
     elif r.shape[-1] == 4:
         # format : (axis, angle)
         axis = r[..., :3]

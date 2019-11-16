@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+import numba as nb
 import numpy as np
 from cho_util.math.common import *
 
@@ -88,6 +91,7 @@ def from_axis_angle(x, out=None):
     return out
 
 
+@nb.njit
 def multiply(q1, q2, out=None):
     q1 = np.asarray(q1)
     q2 = np.asarray(q2)
@@ -102,18 +106,23 @@ def multiply(q1, q2, out=None):
     return out
 
 
+@nb.njit
 def rotate(r, x, out=None):
     x = np.asarray(x)
     if out is None:
         out = np.empty_like(x)
 
-    qx, qy, qz, qw = [r[..., i] for i in range(4)]
-    x, y, z = [x[..., i] for i in range(3)]
+    # Slower?
+    #t = 2.0 * np.cross(r[..., :3], x)
+    #out[:] = x + r[..., -1:] * t + np.cross(r[..., :3], t)
 
-    x0 = qw*x + qy*z - qz*y
-    x1 = qx*x + qy*y + qz*z
-    x2 = qw*z + qx*y - qy*x
-    x3 = qw*y - qx*z + qz*x
+    qx, qy, qz, qw = [r[..., i] for i in range(4)]
+    vx, vy, vz = [x[..., i] for i in range(3)]
+
+    x0 = qw*vx + qy*vz - qz*vy
+    x1 = qx*vx + qy*vy + qz*vz
+    x2 = qw*vz + qx*vy - qy*vx
+    x3 = qw*vy - qx*vz + qz*vx
     out[..., 0] = qw*x0 + qx*x1 + qy*x2 - qz*x3
     out[..., 1] = qw*x3 - qx*x2 + qy*x1 + qz*x0
     out[..., 2] = qw*x2 + qx*x3 - qy*x0 + qz*x1

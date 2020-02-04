@@ -3,7 +3,6 @@ from cho_util.math.common import *
 
 
 def from_matrix(x, out=None):
-    # TODO(yycho0108): implement
     x = np.asarray(x)
     if out is None:
         out = np.empty(shape=np.shape(x)[:-2] + (3,))
@@ -152,12 +151,6 @@ def rotate(r, x, out=None):
 def random(size=(), *args, **kwargs):
     size = tuple(np.reshape(size, [-1])) + (3,)
     return np.random.normal(size=size, *args, **kwargs)
-
-
-def inverse(r, out=None):
-    r = np.asarray(r)
-    if out is None:
-        out = np.empty_like(r)
 
 
 def identity(dtype=np.float64):

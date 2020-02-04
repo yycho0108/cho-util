@@ -22,6 +22,13 @@ def to_euler(x, *args, **kwargs):
 def to_axis_angle(x, *args, **kwargs):
     return _axis_angle.from_euler(x, *args, **kwargs)
 
+
+def inverse(r, out=None):
+    r = np.asarray(r)
+    if out is None:
+        out = np.empty_like(r)
+    return _euler.from_quaternion(_quaternion.inverse(_quaternion.from_euler(r)), out=out)
+
 # def rotate(r, x, out=None):
 #    # option : delegate to matrix
 #    r = to_matrix(r)

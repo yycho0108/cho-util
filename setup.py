@@ -7,7 +7,7 @@ setup(name='cho_util',
       download_url='https://github.com/yycho0108/cho-util/archive/v0.1.tar.gz',
       author='Yoonyoung (Jamie) Cho',
       author_email='jchocholate@gmail.com',
-      keywords=['Transform', 'Math']
+      keywords=['Transform', 'Math'],
       license='MIT',
       packages=find_packages(),
       zip_safe=False,
@@ -16,7 +16,7 @@ setup(name='cho_util',
           'numpy',
           'numba',
           'opencv-python',
-      ]
+      ],
       classifiers=[
           # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
           'Development Status :: 3 - Alpha',

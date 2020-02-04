@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='cho_util',
-      version='0.1.1',
+      version='0.1.2',
       description='My python utilities',
       url='https://github.com/yycho0108/cho-util',
       download_url='https://github.com/yycho0108/cho-util/archive/stable.tar.gz',

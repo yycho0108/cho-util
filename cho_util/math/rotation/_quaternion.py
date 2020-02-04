@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import numba as nb
+# import numba as nb
 import numpy as np
 from cho_util.math.common import *
 
@@ -91,7 +91,7 @@ def from_axis_angle(x, out=None):
     return out
 
 
-@nb.njit
+# @nb.njit
 def multiply(q1, q2, out=None):
     q1 = np.asarray(q1)
     q2 = np.asarray(q2)
@@ -106,7 +106,7 @@ def multiply(q1, q2, out=None):
     return out
 
 
-@nb.njit
+# @nb.njit
 def rotate(r, x, out=None):
     x = np.asarray(x)
     if out is None:

@@ -14,7 +14,6 @@ setup(name='cho_util',
       scripts=['bin/pyhelp'],
       install_requires=[
           'numpy',
-          'numba',
           'opencv-python',
       ],
       classifiers=[

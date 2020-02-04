@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 
 setup(name='cho_util',
-      version='0.1',
+      version='0.1.1',
       description='My python utilities',
       url='https://github.com/yycho0108/cho-util',
-      download_url='https://github.com/yycho0108/cho-util/archive/v0.1.tar.gz',
+      download_url='https://github.com/yycho0108/cho-util/archive/v0.1.1.tar.gz',
       author='Yoonyoung (Jamie) Cho',
       author_email='jchocholate@gmail.com',
       keywords=['Transform', 'Math'],

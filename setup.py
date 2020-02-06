@@ -1,10 +1,18 @@
 from setuptools import setup, find_packages
 
+# Automatically setup long_description.
+import os
+_cwd = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(_cwd, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(name='cho_util',
-      version='0.1.2',
-      description='My python utilities',
+      version='0.1.3',
+      description='Collection of python utilities for a Roboticist',
+      long_description=long_description,
+      long_description_content_type='text/markdown',
       url='https://github.com/yycho0108/cho-util',
-      download_url='https://github.com/yycho0108/cho-util/archive/stable.tar.gz',
+      download_url='https://pypi.org/project/cho-util/',
       author='Yoonyoung (Jamie) Cho',
       author_email='jchocholate@gmail.com',
       keywords=['Transform', 'Math'],

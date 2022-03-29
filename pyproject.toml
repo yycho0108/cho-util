@@ -9,13 +9,11 @@
 requires = [
     "setuptools >= 48",
     "setuptools_scm >= 6.2",
-    "setuptools_scm_git_semver",
     "wheel >= 0.29.0",
 ]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
-version_scheme = "guess-next-rc"
-local_scheme = "time-dot-node"
-normalize = false
+version_scheme = "release-branch-semver"
+local_scheme = "no-local-version"
 write_to = "src/cho_util/_version.py"

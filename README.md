@@ -4,4 +4,4 @@
 
 Common utility functions generally targetted for robotics.
 
-Currently mostly implements mathematical operations.
+Currently mostly implements mathematical operations and application-related utilities.

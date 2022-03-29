@@ -11,10 +11,10 @@ from pathlib import Path
 
 
 def file_cache(name_fn, load_fn, dump_fn, binary: bool = True):
-    """
-    Decorator for caching a result from a function to a file.
-    The caller is responsible for providing a `name_fn` arg
-    that determines a unique key for a given function.
+    """Decorator for caching a result from a function to a file.
+
+    The caller is responsible for providing a `name_fn` arg that
+    determines a unique key for a given function.
     """
     def call_or_load(compute_fn):
         def wrapper(*args, **kwargs):

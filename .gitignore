@@ -175,3 +175,5 @@ tags
 [._]*.un~
 
 # End of https://www.gitignore.io/api/git,vim,linux,python
+env36/
+env38/

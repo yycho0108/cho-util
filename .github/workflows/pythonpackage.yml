@@ -1,25 +1,22 @@
 name: Python package
 
-on: [push]
+on:
+  release:
+    types: [published]
 
 jobs:
-  build:
-
+  deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8]
-
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+    - name: Setup Python
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: '3.x'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install setuptools wheel twine
     - name: Lint with flake8
       run: |
         pip install flake8
@@ -34,3 +31,15 @@ jobs:
       run: |
         pip install pytest
         pytest
+    - name: Publish to package repository
+      run: |
+        python setup.py sdist bdist_wheel
+    - name: Publish distribution to Test PyPI
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        password: ${{ secrets.TEST_PYPI_PASSWORD }}
+        repository_url: https://test.pypi.org/legacy/
+    - name: Publish distribution to PyPI
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        password: ${{ secrets.PYPI_PASSWORD }}

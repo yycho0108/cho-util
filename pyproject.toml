@@ -1,8 +1,10 @@
-[project]
-dependencies = [
-    "numpy >= 1.21.0",
-    "opencv-python >= 4.2.0.32"
-]
+# NOTE(ycho): Uncomment when bumping to python >= 3.8
+#[project]
+#dependencies = [
+#    "numpy >= 1.21.0",
+#    "opencv-python >= 4.2.0.32"
+#]
+
 [build-system]
 requires = [
     "setuptools >= 48",
